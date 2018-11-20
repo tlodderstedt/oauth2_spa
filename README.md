@@ -52,10 +52,10 @@ Security measures needed (1st and only line of defense):
 ### Code
  
  1. Client: create *state* value and store it
- 1. Client: create *PKCE verifier and challenge*
+ 1. Client: create *PKCE verifier and challenge* and store verifier
  1. Client: use response type "code" for authorization request
  1. AS: issue *code* linked to client_id and PKCE challenge
- 1. Client: check *state* (CSRF)
+ 1. Client: check *state* parameter (CSRF) against state value in browser
  1. Client: send *code* along with redirect_uri and PKCE verifier to AS
  1. AS: check code expiration/single use
  1. AS: check code to client_id link
