@@ -1,9 +1,8 @@
 # OAuth 2.0 for Single Page Applications
-```diff
---- If you think that something on this page does not reflect how SPAs work, how OAuth works, 
---- or if you think that important aspects are missing --- feel free to send a pull request 
---- to contribute to the discussion!
-```
+If you think that something on this page does not reflect how SPAs work, how OAuth works, 
+or if you think that important aspects are missing --- feel free to send a pull request 
+to contribute to the discussion!
+
 
 ## SPAs
 We assume a "real" SPA, i.e., the web server of the application only serves static files.
