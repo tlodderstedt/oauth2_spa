@@ -40,9 +40,10 @@ We assume that...
  1. Client: remove URL from browser history
  1. Client: use access token
 
-Security measures needed:
+Security measures needed (1st and only line of defense):
 
- * ID Token with Nonce
+ * ID Token
+ * Nonce
  * State
  * Open Redirector is prevented
  * CSP to prevent referer header
@@ -67,7 +68,7 @@ Security measures needed (1st line of defense):
  * State
  * PKCE
  
- Further Security Measures (2nd line of defense)
+Further Security Measures (2nd line of defense)
  
  * Single use codes
  * Open Redirection is prevented
