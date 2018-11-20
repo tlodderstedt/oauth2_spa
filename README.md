@@ -18,6 +18,8 @@ We assume that...
     * via (proxy) server logs 
     * via the browser history
     * via XSS
+    * via counterfeit resource servers
+  * attacker may try to inject code or access token into the authorization response
   
 
 ## Comparison of Flows
@@ -60,7 +62,13 @@ Security measures needed:
  1. AS: issue access token
  1. Client: use access token
 
-Security measures needed:
+Security measures needed (1st line of defense):
 
  * State
  * PKCE
+ 
+ Further Security Measures (2nd line of defense)
+ 
+ * Single use codes
+ * Open Redirection is prevented
+ * CSP to prevent referer header
