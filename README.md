@@ -31,11 +31,11 @@ We assume that...
  1. AS: issue *access token*
  1. AS: issue *ID Token* with sensible sub (transaction specific in case of plain API authorization?)
  1. Client: send CSP (no referrer)
- 1. Client: check *state* (CSRF)
+ 1. Client: check *state* parameter (CSRF) against state value in browser
  1. Client: check id token:
     1. Client: fetch JWKS file based on issuer URL
     1. Client: check signature of ID token
-    1. Client: check nonce in id token
+    1. Client: check nonce in id token against nonce value in browser
     1. Client: check *at_hash* (https://openid.net/specs/openid-connect-core-1_0.html#ImplicitTokenValidation)
  1. Client: remove URL from browser history
  1. Client: use access token
