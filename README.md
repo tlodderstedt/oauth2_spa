@@ -24,7 +24,7 @@ We assume that...
 
 ## Comparison of Flows
 
-### Hybrid
+### OpenID Connect using Implict Flow (response type "token id_token")
 
  1. Client: create *state* and *nonce* value and store them in browser
  1. Client: use OpenID Connect + response type "token id_token" for authorization request
