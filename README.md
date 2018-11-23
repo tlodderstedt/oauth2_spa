@@ -50,7 +50,7 @@ Security measures needed (1st and only line of defense):
  * Browser history manipulation
 
 ### Access Token Refresh
-Further Authorization Requests are sent to the AS in order to obtain fresh access tokens. Those requests are typically performend in an invisible iFrame. This iFrame is affected by the 3rd party Cookie policy of the browser. 
+Further Authorization Requests are sent to the AS in order to obtain fresh access tokens. Those requests are typically performend in an invisible iFrame. This iFrame is affected by the 3rd party Cookie policy of the browser (see discussion below). 
 
 ### Code
  
@@ -80,17 +80,21 @@ Further Security Measures (2nd line of defense)
 ### Access Token Refresh
 Refreshing via further authorization requests (as described above) is possible, but code also has the ability to issue refresh tokens. The AS may issue a refresh token along with the access token when the client exchanges the code. This refresh token can be used to obtain fresh access tokens using a direct backchannel request between client and AS.
 
-The refresh token themself can be protected against replay in two ways:
+The refresh token itself can be protected against replay in two ways:
 
  * using dynamically issued secrets (dynamic client registration)
  * using refresh token rotation 
+ 
+#### Refresh Token Rotation
+
+For refresh token rotation, the AS issues a new refresh token with every refresh and invalidates the old one. This restricts the lifetime of a refresh token. If someone (might be the legit client or an attacker) submits one of the older, invalidated refresh token, the AS might interpret this as a signal indicating token leakage and revoke the valid refresh token as well. 
 
 ## Observations
 
 Code offers __defense in depth__, OIDC implicit relies on a __single line of defense__.
 
-OIDC implicit relies on the client to implement all security checks. Code places as much as possible security checks at the AS. Given the ratio between clients and AS (many to one), defense is spread across a deployment for OIDC implicit. Moreover, app developers typically are no OAuth & security experts whereas developers of OAuth/OIDC implementations should be more familiar with the specific challenges.
+OIDC implicit relies on the client to implement all security checks. Code places security checks at the AS as much as possible. Given the ratio between clients and AS (many to one), defense is spread across a deployment for OIDC implicit. Moreover, app developers typically are no OAuth & security experts whereas developers of OAuth/OIDC implementations should be more familiar with the specific challenges.
 
-Obtaining fresh access tokens: OIDC implicit requires authorization requests through the browser to obtain fresh access tokens. Such requests, when sent in an hidden iFrame, may fail due to a restrictive 3rd party cookie policy. The reliable solution would be to send those request in a top level window (full page redirect or popup), which would have an negative impact on UX. __This causes clients to use long-lived access tokens, which has an negative impact in case of leakage and replay__. Code supports short-lived and privilege restricted access tokens through refresh tokens: The client can obtain fresh access tokens from the AS's token endpoint at any time without impact on the UX. Short-lived and privilege restricted access tokens reduce the impact of leakage at resource servers. Replay prevention for refresh tokens can be implemented much easier than for access tokens.
+Obtaining fresh access tokens: OIDC implicit requires authorization requests through the browser to obtain fresh access tokens. Such requests, when sent in a hidden iFrame, may fail due to a restrictive 3rd party cookie policy. The reliable solution would be to send those request in a top level window (full page redirect or popup), which would have a negative impact on UX. __This causes clients to use long-lived access tokens, which has a negative impact in case of leakage and replay__. Code supports short-lived and privilege restricted access tokens through refresh tokens: The client can obtain fresh access tokens from the AS's token endpoint at any time without impact on the UX. Short-lived and privilege restricted access tokens reduce the impact of leakage at resource servers. Replay prevention for refresh tokens can be implemented much easier than for access tokens.
 
-OIDC implicit forces the AS (actually the OP) to expose the user's identity to the client (through the *sub* claim) even in cases where the client just want to perform a pure authorization to get access token to an API (e.g. payment initiation). The OP MUST get the consent from the user for this data transfer and the client policy must describe how this data is used and protected (at least under GDPR). The alternative is to provide the client with an ephemeral user id. This in turn requires the AS/OP, for every request with scope "openid", to decide whether to expose a real or a ephemeral user id. That makes the implementation of both the AS and the clients more complex since it can only be controlled by a client-specific fixed policy at the AS.
+OIDC implicit forces the AS (actually the OP) to expose the user's identity to the client (through the *sub* claim) even in cases where the client just wants to perform a pure authorization to get an access token for an API (e.g., payment initiation). The OP MUST get the consent from the user for this data transfer and the client policy must describe how this data is used and protected (at least under GDPR). The alternative is to provide the client with an ephemeral user id. This in turn requires the AS/OP, for every request with scope "openid", to decide whether to expose a real or an ephemeral user id. That makes the implementation of both the AS and the clients more complex since it can only be controlled by a client-specific fixed policy at the AS.
